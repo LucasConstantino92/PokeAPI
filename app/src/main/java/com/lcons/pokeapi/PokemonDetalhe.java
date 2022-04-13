@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.lcons.pokeapi.adapter.PokemonEvolutionAdapter;
 import com.lcons.pokeapi.adapter.PokemonTypeAdapter;
 import com.lcons.pokeapi.common.Common;
 import com.lcons.pokeapi.model.Pokemon;
@@ -86,8 +87,7 @@ public class PokemonDetalhe extends Fragment {
         if (getArguments().get("num") == null)
             pokemon = Common.commonPokemonList.get(getArguments().getInt("position"));
         else
-            pokemon = null;
-
+            pokemon = Common.findPokemonByNum(getArguments().getString("num"));
 
         pokemon_img = (ImageView) itemView.findViewById(R.id.pokemon_image);
         pokemon_nome = (TextView) itemView.findViewById(R.id.nome);
@@ -125,8 +125,19 @@ public class PokemonDetalhe extends Fragment {
         pokemon_altura.setText("Altura: " + pokemon.getHeight());
 
         //Setar tipo
-        PokemonTypeAdapter typeAdapter = new PokemonTypeAdapter(getActivity(),pokemon.getType());
+        PokemonTypeAdapter typeAdapter = new PokemonTypeAdapter(getActivity(), pokemon.getType());
         recycle_tipo.setAdapter(typeAdapter);
+
+        //Setar fraqueza
+        PokemonTypeAdapter weaknessAdapter = new PokemonTypeAdapter(getActivity(), pokemon.getWeaknesses());
+        recycle_fraqueza.setAdapter(weaknessAdapter);
+
+        //Setar evolução
+        PokemonEvolutionAdapter prevEvolutionAdapter = new PokemonEvolutionAdapter(getActivity(), pokemon.getPrev_evolution());
+        recycle_prev_evol.setAdapter(prevEvolutionAdapter);
+
+        PokemonEvolutionAdapter nextEvolutionAdapter = new PokemonEvolutionAdapter(getActivity(), pokemon.getNext_evolution());
+        recycle_next_evol.setAdapter(nextEvolutionAdapter);
 
     }
 }

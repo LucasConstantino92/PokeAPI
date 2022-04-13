@@ -25,11 +25,11 @@ public class MainActivity extends AppCompatActivity {
     BroadcastReceiver showDetail = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().toString().equals(Common.KEY_ENABLE_HOME)) {
+            if (intent.getAction().equals(Common.KEY_ENABLE_HOME)) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);  //Habilita botão de voltar na Toolbar
                 getSupportActionBar().setDisplayShowHomeEnabled(true);  //Mesmo que o de cima
 
-                //Replace fragmento
+                //Replace fragment
                 Fragment detailFragment = PokemonDetalhe.getInstance();
                 int position = intent.getIntExtra("position", -1);
                 Bundle bundle = new Bundle();
@@ -37,12 +37,37 @@ public class MainActivity extends AppCompatActivity {
                 detailFragment.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.list_pokemon,detailFragment);
+                fragmentTransaction.replace(R.id.list_pokemon, detailFragment);
                 fragmentTransaction.addToBackStack("detail");
                 fragmentTransaction.commit();
 
                 //Setar nome do Pokemon na Toolbar
                 Pokemon pokemon = Common.commonPokemonList.get(position);
+                toolbar.setTitle(pokemon.getName());
+            }
+        }
+    };
+
+    BroadcastReceiver showEvolution = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Common.KEY_NUM_EVOLUTION)) {
+
+                //Replace fragment
+                Fragment detailFragment = PokemonDetalhe.getInstance();
+                Bundle bundle = new Bundle();
+                String num = intent.getStringExtra("num");
+                bundle.putString("num", num);
+                detailFragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.show(detailFragment);
+                fragmentTransaction.replace(R.id.list_pokemon, detailFragment);
+                fragmentTransaction.addToBackStack("detail");
+                fragmentTransaction.commit();
+
+                //Setar nome do Pokemon na Toolbar
+                Pokemon pokemon = Common.findPokemonByNum(num);
                 toolbar.setTitle(pokemon.getName());
             }
         }
@@ -60,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
         //Registrar Broadcaster
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(showDetail, new IntentFilter(Common.KEY_ENABLE_HOME));
+
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(showEvolution, new IntentFilter(Common.KEY_NUM_EVOLUTION));
     }
 
     @Override

@@ -9,11 +9,11 @@ import java.util.List;
 
 public class Common {
     public static final String KEY_ENABLE_HOME = "enable_home";
+    public static final String KEY_NUM_EVOLUTION = "num_evolution";
     public static List<Pokemon> commonPokemonList = new ArrayList<>();
 
     public static int getColorByType(String type) {
-        switch(type)
-        {
+        switch (type) {
 
             case "Normal":
                 return Color.parseColor("#A4A27A");
@@ -78,5 +78,12 @@ public class Common {
             default:
                 return Color.parseColor("#658FA0");
         }
+    }
+
+    public static Pokemon findPokemonByNum(String num) {
+        for (Pokemon pokemon : Common.commonPokemonList)
+            if (pokemon.getNum().equals(num))
+                return pokemon;
+        return null;
     }
 }

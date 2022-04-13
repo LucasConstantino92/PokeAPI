@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.lcons.pokeapi.adapter.PokemonTypeAdapter;
 import com.lcons.pokeapi.common.Common;
 import com.lcons.pokeapi.model.Pokemon;
 
@@ -122,6 +123,10 @@ public class PokemonDetalhe extends Fragment {
 
         pokemon_peso.setText("Peso " + pokemon.getWeight());
         pokemon_altura.setText("Altura: " + pokemon.getHeight());
+
+        //Setar tipo
+        PokemonTypeAdapter typeAdapter = new PokemonTypeAdapter(getActivity(),pokemon.getType());
+        recycle_tipo.setAdapter(typeAdapter);
 
     }
 }
